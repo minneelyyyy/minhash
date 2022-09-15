@@ -91,9 +91,9 @@ void min_hashmap_linked_delete(struct min_hashmap_linked* ptr) {
 struct min_hashmap* min_hashmap_add(struct min_hashmap* map,
                                     enum min_type type, void* key,
                                     int keylen, void* value) {
-    unsigned int key_hash = hash(key, keylen);
+    unsigned int key_hash = hash(type == POINTER ? key : (void*) &key, keylen);
     unsigned int bucket = key_hash % map->capacity;
-    
+
     struct min_hashmap_linked* item_location = map->items[bucket].items;
 
     while (item_location->item.type != UNKNOWN) {
@@ -113,7 +113,7 @@ struct min_hashmap* min_hashmap_add(struct min_hashmap* map,
 
 void* min_hashmap_get(struct min_hashmap* map,
 	                  enum min_type type, void* key, int keylen) {
-    unsigned int key_hash = hash(key, keylen);
+    unsigned int key_hash = hash(type == POINTER ? key : (void*) &key, keylen);
     unsigned int bucket = key_hash % map->capacity;
 
     struct min_hashmap_linked* item = map->items[bucket].items;
