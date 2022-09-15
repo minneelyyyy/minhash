@@ -8,6 +8,8 @@ PREFIX?=/usr
 object-files := src/hashmap.o \
 				src/hash.o
 
+include-files := include/minhash.h
+
 .PHONY: all tests clean install uninstall
 
 all: libminhash.so libminhash.a
@@ -31,7 +33,9 @@ clean:
 install:
 	mv libminhash.so $(PREFIX)/lib/libminhash.so
 	mv libminhash.a $(PREFIX)/lib/libminhash.a
+	cp $(include-files) $(PREFIX)/include/
 
 uninstall:
 	rm -f $(PREFIX)/lib/libminhash.so
 	rm -f $(PREFIX)/lib/libminhash.a
+	rm -f $(PREFIX)/$(include-files)
