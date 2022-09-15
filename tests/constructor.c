@@ -2,7 +2,7 @@
 #include <string.h>
 #include <minhash.h>
 
-int main() {
+int main(void) {
     int x;
 
     struct min_hashmap* map = min_hashmap_new(16);

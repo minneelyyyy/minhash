@@ -13,13 +13,21 @@ for debug, use `make all`
 To use this library, you must include `minhash.h`, then you can create a new hashmap with `min_hashmap_new()`.
 
 ```c
+#include <stdio.h>
+#include <string.h>
 #include <minhash.h>
 
 int main(void) {
+    int x;
+
     struct min_hashmap* map = min_hashmap_new(16);
-    
-    /* use the hashmap... */
-    
+
+    min_hashmap_add(map, HM_key_string("Hello"), HM_int(2022));
+
+    x = (int) min_hashmap_get(map, HM_key_string("Hello"));
+
+    printf("%s = %d\n", "Hello", x);
+
     min_hashmap_delete(map);
 
     return 0;
