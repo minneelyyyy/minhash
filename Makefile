@@ -1,6 +1,6 @@
 CC?=cc
 AR?=ar
-CFLAGS?=-g
+CFLAGS?=-g -Wall -Wextra -ansi -pedantic
 ARFLAGS=-crs
 INCLUDE=-I./include
 PREFIX?=/usr

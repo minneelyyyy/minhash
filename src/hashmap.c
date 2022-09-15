@@ -26,22 +26,23 @@ void min_hashmap_delete(struct min_hashmap* ptr) {
     free(ptr);
 }
 
-struct min_hashmap_bucket* min_hashmap_bucket_new(struct min_hashmap_bucket* prealloc) {
-    if (prealloc != NULL) {
-        prealloc->count = 0;
-        prealloc->heap = 0;
-        prealloc->items = min_hashmap_linked_new(16);
+struct min_hashmap_bucket* min_hashmap_bucket_new(
+        struct min_hashmap_bucket* prealloc) {
+    struct min_hashmap_bucket* ptr = prealloc;
 
-        return prealloc;
+    if (ptr != NULL) {
+        ptr->count = 0;
+        ptr->heap = 0;
+        ptr->items = min_hashmap_linked_new(16);
     } else {
-        struct min_hashmap_bucket* ptr = malloc(sizeof(struct min_hashmap_bucket));
+        ptr = malloc(sizeof(struct min_hashmap_bucket));
 
         ptr->count = 0;
         ptr->heap = 1;
         ptr->items = min_hashmap_linked_new(16);
-
-        return ptr;
     }
+
+    return ptr;
 }
 
 void min_hashmap_bucket_delete(struct min_hashmap_bucket* ptr) {
@@ -85,4 +86,47 @@ void min_hashmap_linked_delete(struct min_hashmap_linked* ptr) {
 
         free(temp);
     }
+}
+
+struct min_hashmap* min_hashmap_add(struct min_hashmap* map,
+                                    enum min_type type, void* key,
+                                    int keylen, void* value) {
+    unsigned int key_hash = hash(key, keylen);
+    unsigned int bucket = key_hash % map->capacity;
+    
+    struct min_hashmap_linked* item_location = map->items[bucket].items;
+
+    while (item_location->item.type != UNKNOWN) {
+        if (item_location == NULL) {
+            item_location = min_hashmap_linked_new(16);
+        }
+
+        item_location = item_location->next;
+    }
+
+    item_location->item.hash = key_hash;
+    item_location->item.type = type;
+    item_location->item.value = value;
+
+    return map;
+}
+
+void* min_hashmap_get(struct min_hashmap* map,
+	                  enum min_type type, void* key, int keylen) {
+    unsigned int key_hash = hash(key, keylen);
+    unsigned int bucket = key_hash % map->capacity;
+
+    struct min_hashmap_linked* item = map->items[bucket].items;
+
+    (void) type;
+
+    while (item->item.hash != key_hash) {
+        if (item->next == NULL) {
+            return NULL;
+        }
+
+        item = item->next;
+    }
+
+    return item->item.value;
 }
