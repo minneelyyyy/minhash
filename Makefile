@@ -28,7 +28,7 @@ tests: libminhash.a
 
 clean:
 	rm -rf $(object-files) libminhash.so libminhash.a
-	rm -rf test/constructor
+	rm -rf tests/constructor
 
 install:
 	mv libminhash.so $(PREFIX)/lib/libminhash.so
